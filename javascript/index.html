@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Library</title>
+</head>
+<body>
+  <h1>My Library</h1>
+  <p>Welcome to my library.</p>
+
+  <table id="library-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Pages</th>
+        <th>Read</th>
+      </tr>
+    </thead>
+    <tbody id="library-body">
+      <!-- les lignes sont injectées par JS -->
+    </tbody>
+  </table>
+
+  <button onclick="toggleForm()">Add Book</button>
+
+  <form id="book-form" style="display: none;">
+    <input type="text"   id="title"  placeholder="Title"  required>
+    <input type="text"   id="author" placeholder="Author" required>
+    <input type="number" id="pages"  placeholder="Pages"  required>
+    <label>
+      <input type="checkbox" id="read"> Read
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script src="3-Project-Library.js"></script>
+  <script>
+    function renderLibrary() {
+      const tbody = document.getElementById('library-body');
+      tbody.innerHTML = '';                          // vide avant de re-rendre
+
+      myLibrary.forEach((item) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item._id}</td>
+          <td>${item.title}</td>
+          <td>${item.author}</td>
+          <td>${item.pages}</td>
+          <td>${item.read ? '✓' : '✗'}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function toggleForm() {
+      const form = document.getElementById('book-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.getElementById('book-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title  = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+      const pages  = document.getElementById('pages').value;
+      const read   = document.getElementById('read').checked;
+
+      addBookToLibrary(title, author, pages, read);   // fonction dans le .js
+      renderLibrary();                                 // re-rend le tableau
+      this.reset();                                    // vide le formulaire
+      toggleForm();                                    // cache le formulaire
+    });
+
+    renderLibrary();   // premier rendu au chargement
+  </script>
+</body>
+</html>
